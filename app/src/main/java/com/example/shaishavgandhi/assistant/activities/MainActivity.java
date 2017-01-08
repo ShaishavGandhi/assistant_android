@@ -1,11 +1,12 @@
-package com.example.shaishavgandhi.assistant;
+package com.example.shaishavgandhi.assistant.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,19 +14,39 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.shaishavgandhi.assistant.R;
+import com.example.shaishavgandhi.assistant.data.PreferenceSource;
+import com.example.shaishavgandhi.assistant.databinding.ActivityMainBinding;
+import com.example.shaishavgandhi.assistant.databinding.ContentMainBinding;
+import com.example.shaishavgandhi.assistant.network.APIManager;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
-import retrofit2.Call;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int SPEECH_RECOGNITION_CODE = 0;
+    ContentMainBinding binding;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("lato.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.content_main, null, false);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,5 +114,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeNetworkRequest(String query) {
         APIManager.getInstance(getApplicationContext()).submitQuery(query);
+    }
+
+    private void populateSections() {
+        populateIpSection();
+    }
+
+    private void populateIpSection() {
+        String ipAddress = PreferenceSource.getInstance(getApplicationContext()).getIp();
+        binding.ipAddress.setText(ipAddress);
     }
 }

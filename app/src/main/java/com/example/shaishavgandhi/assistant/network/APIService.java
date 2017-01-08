@@ -1,4 +1,6 @@
-package com.example.shaishavgandhi.assistant;
+package com.example.shaishavgandhi.assistant.network;
+
+import com.example.shaishavgandhi.assistant.data.models.AssistantResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

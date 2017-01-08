@@ -1,4 +1,4 @@
-package com.example.shaishavgandhi.assistant;
+package com.example.shaishavgandhi.assistant.data.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

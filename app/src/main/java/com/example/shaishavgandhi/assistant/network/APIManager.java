@@ -1,7 +1,9 @@
-package com.example.shaishavgandhi.assistant;
+package com.example.shaishavgandhi.assistant.network;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.example.shaishavgandhi.assistant.data.models.AssistantResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
