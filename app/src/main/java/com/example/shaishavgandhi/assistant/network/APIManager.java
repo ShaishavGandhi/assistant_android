@@ -3,6 +3,7 @@ package com.example.shaishavgandhi.assistant.network;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.shaishavgandhi.assistant.data.PreferenceSource;
 import com.example.shaishavgandhi.assistant.data.models.AssistantResponse;
 
 import retrofit2.Call;
@@ -19,7 +20,7 @@ public class APIManager {
 
     private static APIManager mAPIManager;
     private Context mContext;
-    public static final String BASE_URL = "http://10.0.1.51:5000/";
+    public static String BASE_URL = "http://";
     Retrofit retrofit;
 
     private APIManager(Context context) {
@@ -31,11 +32,12 @@ public class APIManager {
         if (mAPIManager == null) {
             mAPIManager = new APIManager(context);
         }
-
         return mAPIManager;
     }
 
     private void init() {
+        String ip = PreferenceSource.getInstance(mContext).getIp();
+        BASE_URL = BASE_URL + ip + ":5000/";
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -57,5 +59,9 @@ public class APIManager {
                 Toast.makeText(mContext, "Command Failed. Sorry about that!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static void reset() {
+        mAPIManager = null;
     }
 }

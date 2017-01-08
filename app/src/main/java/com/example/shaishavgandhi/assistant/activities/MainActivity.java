@@ -4,9 +4,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.databinding.tool.util.StringUtils;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +25,11 @@ import com.example.shaishavgandhi.assistant.databinding.ActivityMainBinding;
 import com.example.shaishavgandhi.assistant.databinding.ContentMainBinding;
 import com.example.shaishavgandhi.assistant.network.APIManager;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -29,7 +39,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SPEECH_RECOGNITION_CODE = 0;
-    ContentMainBinding binding;
+    boolean ping;
+    ActivityMainBinding binding;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -44,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-        setContentView(R.layout.activity_main);
-        binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.content_main, null, false);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 setupSpeechToText();
             }
         });
+
+        populateSections();
     }
 
     @Override
@@ -122,6 +134,61 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateIpSection() {
         String ipAddress = PreferenceSource.getInstance(getApplicationContext()).getIp();
-        binding.ipAddress.setText(ipAddress);
+        if (ipAddress.equals("")) {
+            binding.contentMain.ipAddress.setVisibility(View.GONE);
+            binding.contentMain.ipAddressEdit.setVisibility(View.VISIBLE);
+            binding.contentMain.ipButton.setText("Save");
+        } else {
+            binding.contentMain.ipAddress.setText(ipAddress);
+        }
+
+        binding.contentMain.ipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (binding.contentMain.ipButton.getText().toString().equals("Save")) {
+                    PreferenceSource.getInstance(getApplicationContext()).setIp(binding.contentMain.ipAddressEdit.getText().toString());
+                    binding.contentMain.ipButton.setText("Edit");
+                    binding.contentMain.ipAddress.setVisibility(View.VISIBLE);
+                    binding.contentMain.ipAddressEdit.setVisibility(View.GONE);
+                    binding.contentMain.ipAddress.setText(binding.contentMain.ipAddressEdit.getText().toString());
+                } else {
+                    binding.contentMain.ipButton.setText("Save");
+                    binding.contentMain.ipAddress.setVisibility(View.GONE);
+                    binding.contentMain.ipAddressEdit.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        binding.contentMain.pingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Pinging your command center",Snackbar.LENGTH_SHORT).show();
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        ping = pingHost(PreferenceSource.getInstance(getApplicationContext()).getIp(), 5000, 5000);
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!ping) {
+                                    Toast.makeText(getApplicationContext(), "Command Center Is Down! ", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Command Center Is Healthy and Running! ", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    public static boolean pingHost(String host, int port, int timeout) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(host, port), timeout);
+            return true;
+        } catch (IOException e) {
+            return false; // Either timeout or unreachable or failed DNS lookup.
+        }
     }
 }

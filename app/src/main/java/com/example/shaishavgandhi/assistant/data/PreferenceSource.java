@@ -3,6 +3,8 @@ package com.example.shaishavgandhi.assistant.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.shaishavgandhi.assistant.network.APIManager;
+
 /**
  * Created by shaishav.gandhi on 1/7/17.
  */
@@ -35,6 +37,7 @@ public class PreferenceSource {
     public void setIp(String ip) {
         editor.putString(IP, ip);
         editor.commit();
+        APIManager.reset();
     }
 
 }
