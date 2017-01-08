@@ -16,6 +16,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import retrofit2.Call;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int SPEECH_RECOGNITION_CODE = 0;
@@ -82,10 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK && null != data) {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String text = result.get(0);
-                    Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                    String query = result.get(0);
+                    makeNetworkRequest(query);
                 }
                 break;
         }
+    }
+
+    private void makeNetworkRequest(String query) {
+        APIManager.getInstance(getApplicationContext()).submitQuery(query);
     }
 }
