@@ -47,7 +47,7 @@ public class APIManager {
     public void submitQuery(String query) {
         APIService apiService =
                 retrofit.create(APIService.class);
-        Call<AssistantResponse> call = apiService.submitQuery(query);
+        Call<AssistantResponse> call = apiService.submitQuery(query, PreferenceSource.getInstance(mContext).constructPreferenceString());
         call.enqueue(new Callback<AssistantResponse>() {
             @Override
             public void onResponse(Call<AssistantResponse> call, Response<AssistantResponse> response) {

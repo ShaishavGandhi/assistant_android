@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example.shaishavgandhi.assistant.R;
@@ -130,36 +131,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateSections() {
         populateIpSection();
+        populatePreferencesSection();
     }
 
     private void populateIpSection() {
         String ipAddress = PreferenceSource.getInstance(getApplicationContext()).getIp();
         if (ipAddress.equals("")) {
-            binding.contentMain.ipAddress.setVisibility(View.GONE);
-            binding.contentMain.ipAddressEdit.setVisibility(View.VISIBLE);
-            binding.contentMain.ipButton.setText("Save");
+            binding.contentMain.sectionIp.ipAddress.setVisibility(View.GONE);
+            binding.contentMain.sectionIp.ipAddressEdit.setVisibility(View.VISIBLE);
+            binding.contentMain.sectionIp.ipButton.setText("Save");
         } else {
-            binding.contentMain.ipAddress.setText(ipAddress);
+            binding.contentMain.sectionIp.ipAddress.setText(ipAddress);
         }
 
-        binding.contentMain.ipButton.setOnClickListener(new View.OnClickListener() {
+        binding.contentMain.sectionIp.ipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (binding.contentMain.ipButton.getText().toString().equals("Save")) {
-                    PreferenceSource.getInstance(getApplicationContext()).setIp(binding.contentMain.ipAddressEdit.getText().toString());
-                    binding.contentMain.ipButton.setText("Edit");
-                    binding.contentMain.ipAddress.setVisibility(View.VISIBLE);
-                    binding.contentMain.ipAddressEdit.setVisibility(View.GONE);
-                    binding.contentMain.ipAddress.setText(binding.contentMain.ipAddressEdit.getText().toString());
+                if (binding.contentMain.sectionIp.ipButton.getText().toString().equals("Save")) {
+                    PreferenceSource.getInstance(getApplicationContext()).setIp(binding.contentMain.sectionIp.ipAddressEdit.getText().toString());
+                    binding.contentMain.sectionIp.ipButton.setText("Edit");
+                    binding.contentMain.sectionIp.ipAddress.setVisibility(View.VISIBLE);
+                    binding.contentMain.sectionIp.ipAddressEdit.setVisibility(View.GONE);
+                    binding.contentMain.sectionIp.ipAddress.setText(binding.contentMain.sectionIp.ipAddressEdit.getText().toString());
                 } else {
-                    binding.contentMain.ipButton.setText("Save");
-                    binding.contentMain.ipAddress.setVisibility(View.GONE);
-                    binding.contentMain.ipAddressEdit.setVisibility(View.VISIBLE);
+                    binding.contentMain.sectionIp.ipButton.setText("Save");
+                    binding.contentMain.sectionIp.ipAddress.setVisibility(View.GONE);
+                    binding.contentMain.sectionIp.ipAddressEdit.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        binding.contentMain.pingButton.setOnClickListener(new View.OnClickListener() {
+        binding.contentMain.sectionIp.pingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Pinging your command center",Snackbar.LENGTH_SHORT).show();
@@ -181,6 +183,37 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    public void populatePreferencesSection() {
+        String preference = PreferenceSource.getInstance(getApplicationContext()).getTemperaturePreference();
+        int index = getIndexFromTemperature(preference);
+        binding.contentMain.sectionPreferences.temperatureUnitSpinner.setSelection(index);
+        binding.contentMain.sectionPreferences.temperatureUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String unit = getResources().getStringArray(R.array.temperature_unit)[i];
+                PreferenceSource.getInstance(getApplicationContext()).setTemperaturePreference(unit);
+                Snackbar.make(view, "Preference relayed to command center!", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public int getIndexFromTemperature(String unit) {
+        String[] array = getResources().getStringArray(R.array.temperature_unit);
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(unit)) {
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     public static boolean pingHost(String host, int port, int timeout) {

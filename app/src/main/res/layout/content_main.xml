@@ -1,111 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout     xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data/>
-<android.support.v4.widget.NestedScrollView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E5E5E5"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.shaishavgandhi.assistant.activities.MainActivity"
-    tools:showIn="@layout/activity_main">
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/section_ip"
+    <android.support.v4.widget.NestedScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_main"
         android:layout_width="match_parent"
-        style="@style/CardView.Light"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.example.shaishavgandhi.assistant.activities.MainActivity"
+        tools:showIn="@layout/activity_main">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ip_logo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/server"
-                android:padding="12dp"
-                app:layout_constraintRight_toLeftOf="@+id/serving_request"
-                android:background="@drawable/circular_border"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintLeft_toRightOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/ip_button"/>
-
-            <TextView
-                android:id="@+id/serving_request"
-                android:layout_width="0dp"
+            <android.support.v7.widget.CardView
+                style="@style/CardView.Light"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toRightOf="@+id/ip_logo"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                style="@style/TextAppearance.AppCompat.Large"
-                android:textSize="20sp"
-                android:text="Serving your commands to :"/>
+                android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/ip_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/serving_request"
-                app:layout_constraintLeft_toRightOf="@+id/ip_logo"
-                android:textStyle="italic"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                tools:text="172.31.99.238"/>
+                <include
+                    android:id="@+id/section_ip"
+                    layout="@layout/section_home_ip"/>
 
-            <EditText
-                android:id="@+id/ip_address_edit"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/serving_request"
-                app:layout_constraintLeft_toRightOf="@+id/ip_logo"
-                android:textStyle="italic"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                android:hint="Your IP Address Here"
-                android:visibility="gone"
-                android:layout_height="wrap_content"/>
+            </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/ip_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:text="Edit"
-                android:padding="4dp"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:background="@android:color/transparent"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintBaseline_toBaselineOf="parent"/>
+            <android.support.v7.widget.CardView
+                style="@style/CardView.Light"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/ping_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:text="Ping"
-                android:layout_marginRight="16dp"
-                android:padding="4dp"
-                style="@style/TextAppearance.AppCompat.Small"
-                android:background="@android:color/transparent"
-                app:layout_constraintRight_toLeftOf="@+id/ip_button"
-                app:layout_constraintBaseline_toBaselineOf="@+id/ip_button"/>
+                <include
+                    android:id="@+id/section_preferences"
+                    layout="@layout/section_home_preferences"/>
 
-        </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
 
-    </android.support.v7.widget.CardView>
+        </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

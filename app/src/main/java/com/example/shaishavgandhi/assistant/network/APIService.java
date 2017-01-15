@@ -13,6 +13,6 @@ import retrofit2.http.Query;
 public interface APIService {
 
     @GET("query")
-    Call<AssistantResponse> submitQuery(@Query("q") String query);
+    Call<AssistantResponse> submitQuery(@Query("q") String query, @Query("preferences") String preferences);
 
 }

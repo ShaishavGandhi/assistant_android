@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Assistant</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="temperature_unit">
+        <item>Fahrenheit</item>
+        <item>Celsius</item>
+    </string-array>
+
 </resources>
